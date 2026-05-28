@@ -12,8 +12,12 @@ TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
 
 app = Flask(__name__, template_folder=TEMPLATE_DIR, static_folder=STATIC_DIR)
+
 saju = SajuLogic()
 ai = AIAnalysis()
+
+# ── 중복 주문 방지 (메모리 캐시) ──────────────────────────────────
+processed_orders = set()
 
 @app.route('/')
 def index():
@@ -25,8 +29,8 @@ def loading():
 
 @app.route('/result', methods=['POST'])
 def result():
-    name       = request.form.get('name', 'Guest')
-    gender     = request.form.get('gender', 'female')
+    name = request.form.get('name', 'Guest')
+    gender = request.form.get('gender', 'female')
     birth_date = request.form.get('birth_date')
     birth_time = request.form.get('birth_time')
 
@@ -35,20 +39,20 @@ def result():
             return "Please provide both birth date and time.", 400
 
         y, m, d = map(int, birth_date.split('-'))
-        hh, mm  = map(int, birth_time.split(':'))
+        hh, mm = map(int, birth_time.split(':'))
 
         pillars = saju.get_gan_zhi(y, m, d, hh, mm)
-        ohaeng  = saju.get_ohaeng_distribution(pillars)
-        interp  = saju.interpret(pillars, ohaeng, {'gender': gender})
+        ohaeng = saju.get_ohaeng_distribution(pillars)
+        interp = saju.interpret(pillars, ohaeng, {'gender': gender})
 
-        age           = datetime.now().year - y + 1
+        age = datetime.now().year - y + 1
         birth_context = f"Born {y} (Age {age})"
 
         ten_gods_all = []
         for pk in interp['ten_gods']:
             ten_gods_all.append(interp['ten_gods'][pk]['gan'])
             ten_gods_all.append(interp['ten_gods'][pk]['zhi'])
-        counts        = Counter(ten_gods_all)
+        counts = Counter(ten_gods_all)
         ten_stars_str = ", ".join([f"{k}×{v}" for k, v in counts.items()])
 
         current_daewun = (
@@ -65,15 +69,15 @@ def result():
         )
 
         if ai_data:
-            interp['total_summary']    = ai_data.get('total_summary',    interp.get('total_summary', ''))
+            interp['total_summary'] = ai_data.get('total_summary', interp.get('total_summary', ''))
             interp['personality_deep'] = ai_data.get('personality_deep', interp.get('core', ''))
-            interp['social_analysis']  = ai_data.get('social_analysis',  interp.get('career', ''))
-            interp['health_analysis']  = ai_data.get('health_analysis',  interp.get('advice', ''))
-            interp['daewoon_trend']    = ai_data.get('daewoon_trend',    '')
-            interp['love_romance']     = ai_data.get('love_romance',     interp.get('love', ''))
-            interp['wealth_strategy']  = ai_data.get('wealth_strategy',  interp.get('wealth', ''))
-            interp['core']             = ai_data.get('personality_deep', interp.get('core', ''))
-            interp['advice']           = ai_data.get('health_analysis',  interp.get('advice', ''))
+            interp['social_analysis'] = ai_data.get('social_analysis', interp.get('career', ''))
+            interp['health_analysis'] = ai_data.get('health_analysis', interp.get('advice', ''))
+            interp['daewoon_trend'] = ai_data.get('daewoon_trend', '')
+            interp['love_romance'] = ai_data.get('love_romance', interp.get('love', ''))
+            interp['wealth_strategy'] = ai_data.get('wealth_strategy', interp.get('wealth', ''))
+            interp['core'] = ai_data.get('personality_deep', interp.get('core', ''))
+            interp['advice'] = ai_data.get('health_analysis', interp.get('advice', ''))
 
             if 'gmhs' in ai_data and isinstance(ai_data['gmhs'], dict):
                 for period in ['year', 'month', 'day', 'hour']:
@@ -98,8 +102,8 @@ def result():
 def lunar_to_solar(y, m, d):
     """음력 날짜를 양력으로 변환"""
     calendar = KoreanLunarCalendar()
-    calendar.setLunarDate(y, m, d, False)  # False = 평달 (윤달 아님)
-    solar = calendar.SolarIsoFormat()      # "YYYY-MM-DD"
+    calendar.setLunarDate(y, m, d, False)
+    solar = calendar.SolarIsoFormat()
     parts = solar.split('-')
     return int(parts[0]), int(parts[1]), int(parts[2])
 
@@ -112,26 +116,33 @@ def calculate():
         if not data:
             return jsonify({"error": "No JSON data"}), 400
 
+        # ── 중복 주문 방지 ──────────────────────────────
+        order_id = data.get('order_id')
+        if order_id:
+            if order_id in processed_orders:
+                print(f"[SKIP] 이미 처리된 주문: {order_id}")
+                return jsonify({"success": True, "skipped": True, "reason": "already processed"}), 200
+            processed_orders.add(order_id)
+            print(f"[NEW] 주문 처리 시작: {order_id}")
+        # ────────────────────────────────────────────────
+
         birth_date = data.get('birth_date')
         birth_time = data.get('birth_time', '12:00')
-        gender     = data.get('gender', 'female')
-        calendar   = data.get('calendar', 'solar')
-        name       = data.get('name', 'Guest')
+        gender = data.get('gender', 'female')
+        calendar = data.get('calendar', 'solar')
+        name = data.get('name', 'Guest')
 
         if not birth_date:
             return jsonify({"error": "birth_date required"}), 400
 
-        # 시간 파싱
         if birth_time and ':' in birth_time:
             hh, mm = map(int, birth_time.split(':')[:2])
         else:
             hh, mm = 12, 0
 
-        # 날짜 파싱
         parts = birth_date.replace('.', '-').split('-')
         y, m, d = int(parts[0]), int(parts[1]), int(parts[2])
 
-        # 음력이면 양력으로 변환
         solar_y, solar_m, solar_d = y, m, d
         if calendar and calendar.lower() in ['lunar', '음력']:
             try:
@@ -140,20 +151,17 @@ def calculate():
             except Exception as e:
                 print(f"음력 변환 오류: {e}, 양력으로 처리")
 
-        # 사주 계산 (양력 기준)
         pillars = saju.get_gan_zhi(solar_y, solar_m, solar_d, hh, mm)
-        ohaeng  = saju.get_ohaeng_distribution(pillars)
-        interp  = saju.interpret(pillars, ohaeng, {'gender': gender})
+        ohaeng = saju.get_ohaeng_distribution(pillars)
+        interp = saju.interpret(pillars, ohaeng, {'gender': gender})
 
-        # 십성 분석
         ten_gods_all = []
         for pk in interp.get('ten_gods', {}):
             ten_gods_all.append(interp['ten_gods'][pk]['gan'])
             ten_gods_all.append(interp['ten_gods'][pk]['zhi'])
-        counts        = Counter(ten_gods_all)
+        counts = Counter(ten_gods_all)
         ten_stars_str = ", ".join([f"{k}×{v}" for k, v in counts.items()])
 
-        # 대운
         daewoon_list = interp.get('daewoon', [])
         current_daewun = ""
         if daewoon_list:
@@ -162,7 +170,7 @@ def calculate():
                 f"({daewoon_list[0]['gan']}{daewoon_list[0]['zhi']})"
             )
 
-        age           = datetime.now().year - solar_y + 1
+        age = datetime.now().year - solar_y + 1
         birth_context = f"Born {y} (lunar: {y}-{m}-{d}, solar: {solar_y}-{solar_m}-{solar_d}, Age {age})"
 
         return jsonify({
