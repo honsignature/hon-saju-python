@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HON. Soul Signature — Reading the Elements...</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&family=Jost:wght@200;300&display=swap" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            background: #0d0a0f;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            min-height: 100vh;
+            font-family: 'Jost', sans-serif;
+            color: #fff;
+        }
+        .spinner-wrap { position:relative; width:140px; height:140px; margin-bottom:3rem; }
+        .ring {
+            position:absolute; top:0; left:0; width:100%; height:100%;
+            border-radius:50%; border:1.5px solid transparent;
+        }
+        .ring-1 { border-top-color:#c9a96e; animation: spin 3s linear infinite; }
+        .ring-2 { border-top-color:#8b6f3a; animation: spin 4s linear infinite reverse; transform:scale(0.8); }
+        .ring-3 { border-top-color:#e8d4a0; animation: spin 5s linear infinite; transform:scale(0.6); }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .ring-2 { animation: spin2 4s linear infinite reverse; }
+        @keyframes spin2 { to { transform: scale(0.8) rotate(-360deg); } }
+        .ring-3 { animation: spin3 5s linear infinite; }
+        @keyframes spin3 { to { transform: scale(0.6) rotate(360deg); } }
+        .center-symbol {
+            position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+            font-size:28px; color:#c9a96e;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse { 0%,100%{opacity:0.3} 50%{opacity:1} }
+        .brand { font-size:10px; letter-spacing:4px; color:#c9a96e; text-transform:uppercase; margin-bottom:1rem; }
+        .loading-msg {
+            font-family:'Cormorant Garamond', serif;
+            font-size:1.5rem; font-style:italic;
+            color:#e8d4a0; text-align:center;
+            opacity:0; transition:opacity 0.5s;
+            max-width:400px; line-height:1.6;
+        }
+        .loading-msg.visible { opacity:1; }
+        .sub { margin-top:1rem; font-size:11px; letter-spacing:2px; color:#555; text-transform:uppercase; }
+    </style>
+</head>
+<body>
+    <div class="spinner-wrap">
+        <div class="ring ring-1"></div>
+        <div class="ring ring-2"></div>
+        <div class="ring ring-3"></div>
+        <div class="center-symbol">✦</div>
+    </div>
+
+    <p class="brand">HON. Soul Signature</p>
+    <div id="msg" class="loading-msg visible">Reading the ancient elements...</div>
+    <p class="sub">Please wait while we calculate your four pillars</p>
+
+    <form id="auto-form" action="/result" method="POST" style="display:none;">
+        {% for key, value in data.items() %}
+        <input type="hidden" name="{{ key }}" value="{{ value }}">
+        {% endfor %}
+    </form>
+
+    <script>
+        const msgs = [
+            "Reading the ancient elements...",
+            "Decoding your Four Pillars...",
+            "Mapping the elemental balance...",
+            "Channeling your soul signature...",
+            "Composing your destiny report..."
+        ];
+        let i = 0;
+        const el = document.getElementById('msg');
+        setInterval(() => {
+            el.classList.remove('visible');
+            setTimeout(() => { i = (i+1) % msgs.length; el.textContent = msgs[i]; el.classList.add('visible'); }, 500);
+        }, 2500);
+        window.onload = () => setTimeout(() => document.getElementById('auto-form').submit(), 3500);
+    </script>
+</body>
+</html>

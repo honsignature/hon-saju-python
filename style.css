@@ -1,0 +1,177 @@
+/* HON. Soul Signature — Premium CSS */
+:root {
+    --bg: #0d0a0f;
+    --bg2: #13100c;
+    --bg3: #1a1510;
+    --gold: #c9a96e;
+    --gold-light: #e8d4a0;
+    --cream: #f5efe0;
+    --glass: rgba(255,255,255,0.04);
+    --glass-border: rgba(201,169,110,0.15);
+    --text: #e8d4a0;
+    --muted: #888;
+    --wood: #6b9e5e;
+    --fire: #d4644a;
+    --earth: #c9a96e;
+    --metal: #a8a8a8;
+    --water: #4a90c4;
+    --shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    min-height: 100vh;
+}
+
+.container { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+.center-page { display:flex; align-items:center; justify-content:center; min-height:100vh; }
+
+/* Glass Card */
+.glass-card {
+    background: var(--glass);
+    border: 0.5px solid var(--glass-border);
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow);
+}
+.accent-card { border-left: 2px solid var(--gold); }
+
+/* Brand */
+.eyebrow { font-size:10px; letter-spacing:4px; color:var(--gold); text-transform:uppercase; margin-bottom:0.5rem; }
+.brand-title { font-family:'Cormorant Garamond',serif; font-size:3rem; font-weight:300; color:var(--cream); line-height:1.1; margin-bottom:0.5rem; }
+.brand-title em { font-style:italic; color:var(--gold); }
+.brand-sub { font-size:12px; color:var(--muted); margin-bottom:1.5rem; }
+.brand-header { text-align:center; padding:2rem 0 1.5rem; }
+
+/* Form */
+.form-card { width:100%; max-width:500px; }
+.gold-line { height:0.5px; background:var(--gold); opacity:0.3; margin:1.5rem 0; }
+.form-group { margin-bottom:1.2rem; }
+.form-label { display:block; font-size:10px; letter-spacing:3px; color:var(--gold); text-transform:uppercase; margin-bottom:0.5rem; }
+.form-input {
+    width:100%; background:rgba(255,255,255,0.03); border:0.5px solid rgba(201,169,110,0.2);
+    color:var(--cream); padding:10px 14px; font-size:13px; font-family:'Jost',sans-serif;
+    border-radius:4px; outline:none; transition:border 0.2s;
+}
+.form-input:focus { border-color:var(--gold); }
+.form-input option { background:#1a1510; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+
+/* Gender Toggle */
+.gender-toggle { display:flex; gap:0; }
+.gender-btn { flex:1; }
+.gender-btn input { display:none; }
+.gender-btn span {
+    display:block; padding:10px; text-align:center;
+    border:0.5px solid rgba(201,169,110,0.2); font-size:12px; letter-spacing:1px;
+    color:var(--muted); cursor:pointer; transition:all 0.2s;
+}
+.gender-btn:first-child span { border-radius:4px 0 0 4px; }
+.gender-btn:last-child span { border-radius:0 4px 4px 0; border-left:none; }
+.gender-btn input:checked + span { background:var(--gold); color:#1a1510; border-color:var(--gold); }
+
+/* CTA Button */
+.cta-btn {
+    width:100%; padding:14px; background:transparent;
+    border:1px solid var(--gold); color:var(--gold);
+    font-size:11px; letter-spacing:3px; text-transform:uppercase;
+    font-family:'Jost',sans-serif; cursor:pointer; border-radius:4px;
+    transition:all 0.3s; margin-top:0.5rem;
+}
+.cta-btn:hover { background:rgba(201,169,110,0.1); }
+.form-note { text-align:center; font-size:10px; color:var(--muted); margin-top:0.75rem; letter-spacing:1px; }
+
+/* Result Header */
+.result-header { text-align:center; padding:3rem 0 2rem; border-bottom:0.5px solid rgba(201,169,110,0.2); margin-bottom:2rem; }
+.result-title { font-family:'Cormorant Garamond',serif; font-size:2.5rem; font-weight:300; color:var(--cream); margin:0.5rem 0; }
+.result-sub { font-size:13px; color:var(--muted); }
+
+/* Saju Table */
+.card-title { font-size:12px; letter-spacing:2px; color:var(--gold); text-transform:uppercase; margin-bottom:1.5rem; font-weight:400; }
+.table-wrap { overflow-x:auto; }
+.saju-table { width:100%; border-collapse:collapse; }
+.saju-table th { padding:10px 8px; font-size:10px; letter-spacing:2px; color:var(--muted); text-transform:uppercase; font-weight:400; border-bottom:0.5px solid rgba(255,255,255,0.05); }
+.saju-table td { padding:14px 8px; text-align:center; border-bottom:0.5px solid rgba(255,255,255,0.03); }
+.label-cell { font-size:10px; color:var(--muted); letter-spacing:1px; }
+.pillar-cell { font-size:13px; }
+.me-col { background:rgba(201,169,110,0.05); border-left:0.5px solid rgba(201,169,110,0.2); border-right:0.5px solid rgba(201,169,110,0.2); }
+.hanja { font-family:'Cormorant Garamond',serif; font-size:2rem; display:block; line-height:1.2; }
+.ten-god { font-size:9px; letter-spacing:1px; color:var(--muted); margin-top:4px; }
+
+/* Element Colors */
+.wood { color:var(--wood) !important; }
+.fire { color:var(--fire) !important; }
+.earth { color:var(--earth) !important; }
+.metal { color:var(--metal) !important; }
+.water { color:var(--water) !important; }
+
+/* Tabs */
+.tabs { display:flex; gap:0; margin-bottom:2rem; border-bottom:0.5px solid rgba(201,169,110,0.2); }
+.tab-btn {
+    flex:1; padding:12px 8px; background:transparent;
+    border:none; color:var(--muted); font-size:11px; letter-spacing:2px;
+    text-transform:uppercase; font-family:'Jost',sans-serif; cursor:pointer;
+    transition:all 0.2s; border-bottom:2px solid transparent; margin-bottom:-0.5px;
+}
+.tab-btn:hover { color:var(--gold); }
+.tab-btn.active { color:var(--gold); border-bottom-color:var(--gold); }
+
+/* Two Column */
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; }
+
+/* MD Content */
+.md-content { font-size:13px; line-height:1.9; color:#bbb; }
+.md-content strong { color:var(--gold); font-weight:400; }
+.md-content p { margin-bottom:0.75rem; }
+.md-inline { font-size:13px; color:var(--muted); }
+
+/* Element Bars */
+.el-bars { margin-top:1.5rem; }
+.el-row { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+.el-label { width:52px; font-size:11px; }
+.el-bar-bg { flex:1; height:3px; background:rgba(255,255,255,0.05); border-radius:2px; }
+.el-bar { height:3px; border-radius:2px; transition:width 1s ease; }
+.el-bar.wood { background:var(--wood); }
+.el-bar.fire { background:var(--fire); }
+.el-bar.earth { background:var(--earth); }
+.el-bar.metal { background:var(--metal); }
+.el-bar.water { background:var(--water); }
+.el-pct { width:32px; font-size:11px; color:var(--gold); text-align:right; }
+
+/* Timeline */
+.timeline { position:relative; padding-left:2rem; }
+.timeline::before { content:''; position:absolute; left:0; top:0; bottom:0; width:0.5px; background:rgba(201,169,110,0.2); }
+.timeline-item { position:relative; margin-bottom:1.5rem; }
+.timeline-dot { position:absolute; left:-2.4rem; top:2rem; width:8px; height:8px; border-radius:50%; background:var(--gold); }
+.timeline-card { margin-bottom:0; }
+.pillar-badge { font-family:'Cormorant Garamond',serif; font-size:1rem; margin-left:0.5rem; }
+
+/* Daewoon Grid */
+.dw-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; }
+.dw-card { background:var(--glass); border:0.5px solid var(--glass-border); border-radius:6px; padding:1.2rem; text-align:center; }
+.dw-age { font-size:11px; letter-spacing:2px; color:var(--gold); margin-bottom:0.5rem; }
+.dw-pillar { font-family:'Cormorant Garamond',serif; font-size:1.6rem; margin-bottom:0.5rem; }
+.dw-text { font-size:10px; color:var(--muted); line-height:1.6; }
+
+/* Fade In */
+.fade-in { animation:fadeIn 0.6s ease; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+
+/* Responsive */
+@media (max-width:600px) {
+    .two-col { grid-template-columns:1fr; }
+    .dw-grid { grid-template-columns:repeat(2,1fr); }
+    .form-row { grid-template-columns:1fr; }
+    .brand-title { font-size:2rem; }
+    .result-title { font-size:1.8rem; }
+    .tabs { overflow-x:auto; }
+    .tab-btn { font-size:9px; padding:10px 4px; }
+}

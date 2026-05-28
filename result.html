@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ name }}'s Soul Report — HON. Soul Signature</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- 헤더 -->
+        <header class="result-header">
+            <p class="eyebrow">HON. Soul Signature</p>
+            <h1 class="result-title">{{ name }}'s Soul Report</h1>
+            <p class="result-sub md-inline">{{ interp.core }}</p>
+        </header>
+
+        <!-- 사주 원국표 -->
+        <div class="glass-card">
+            <h3 class="card-title"><i class="fa-solid fa-table-cells-large"></i> Four Pillars · 사주팔자</h3>
+            <div class="table-wrap">
+                <table class="saju-table">
+                    <thead>
+                        <tr>
+                            <th>·</th>
+                            <th>Hour · 시</th>
+                            <th class="me-col">Day · 일 <small>(You)</small></th>
+                            <th>Month · 월</th>
+                            <th>Year · 년</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="label-cell">天干<br><small>Stem</small></td>
+                            <td class="pillar-cell {{ pillars.hour.gan_element }}">
+                                <span class="hanja">{{ pillars.hour.gan }}</span>
+                                <div class="ten-god">{{ interp.ten_gods.hour.gan }}</div>
+                            </td>
+                            <td class="pillar-cell me-col {{ pillars.day.gan_element }}">
+                                <span class="hanja">{{ pillars.day.gan }}</span>
+                                <div class="ten-god">Day Master</div>
+                            </td>
+                            <td class="pillar-cell {{ pillars.month.gan_element }}">
+                                <span class="hanja">{{ pillars.month.gan }}</span>
+                                <div class="ten-god">{{ interp.ten_gods.month.gan }}</div>
+                            </td>
+                            <td class="pillar-cell {{ pillars.year.gan_element }}">
+                                <span class="hanja">{{ pillars.year.gan }}</span>
+                                <div class="ten-god">{{ interp.ten_gods.year.gan }}</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label-cell">地支<br><small>Branch</small></td>
+                            <td class="pillar-cell {{ pillars.hour.zhi_element }}">
+                                <span class="hanja">{{ pillars.hour.zhi }}</span>
+                                <div class="ten-god">{{ interp.ten_gods.hour.zhi }}</div>
+                            </td>
+                            <td class="pillar-cell me-col {{ pillars.day.zhi_element }}">
+                                <span class="hanja">{{ pillars.day.zhi }}</span>
+                                <div class="ten-god">{{ interp.ten_gods.day.zhi }}</div>
+                            </td>
+                            <td class="pillar-cell {{ pillars.month.zhi_element }}">
+                                <span class="hanja">{{ pillars.month.zhi }}</span>
+                                <div class="ten-god">{{ interp.ten_gods.month.zhi }}</div>
+                            </td>
+                            <td class="pillar-cell {{ pillars.year.zhi_element }}">
+                                <span class="hanja">{{ pillars.year.zhi }}</span>
+                                <div class="ten-god">{{ interp.ten_gods.year.zhi }}</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 탭 네비게이션 -->
+        <nav class="tabs">
+            <button class="tab-btn active" onclick="openTab(event,'basic')">Soul Reading</button>
+            <button class="tab-btn" onclick="openTab(event,'ohaeng')">Five Elements</button>
+            <button class="tab-btn" onclick="openTab(event,'gmhs')">Life Journey</button>
+            <button class="tab-btn" onclick="openTab(event,'daewoon')">Major Cycles</button>
+        </nav>
+
+        <!-- TAB 1: Soul Reading -->
+        <div id="basic" class="tab-content active">
+            <div class="glass-card accent-card">
+                <h3 class="card-title"><i class="fa-solid fa-crown"></i> Life Overview</h3>
+                <div class="md-content">{{ interp.total_summary }}</div>
+            </div>
+            <div class="glass-card">
+                <h3 class="card-title"><i class="fa-solid fa-star"></i> Today's Energy · {{ interp.today_luck.date }}</h3>
+                <h4 style="color:var(--gold);margin-bottom:0.5rem;">{{ interp.today_luck.title }}</h4>
+                <div class="md-content">{{ interp.today_luck.desc }}</div>
+            </div>
+            <div class="two-col">
+                <div class="glass-card">
+                    <h3 class="card-title"><i class="fa-solid fa-fingerprint"></i> Soul Portrait</h3>
+                    <div class="md-content">{{ interp.personality_deep }}</div>
+                </div>
+                <div class="glass-card">
+                    <h3 class="card-title"><i class="fa-solid fa-briefcase"></i> Social Archetype</h3>
+                    <div class="md-content">{{ interp.social_analysis }}</div>
+                </div>
+            </div>
+            <div class="two-col">
+                <div class="glass-card">
+                    <h3 class="card-title"><i class="fa-solid fa-heart"></i> Love & Connection</h3>
+                    <div class="md-content">{{ interp.love_romance }}</div>
+                </div>
+                <div class="glass-card">
+                    <h3 class="card-title"><i class="fa-solid fa-coins"></i> Wealth Strategy</h3>
+                    <div class="md-content">{{ interp.wealth_strategy }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: Five Elements -->
+        <div id="ohaeng" class="tab-content" style="display:none;">
+            <div class="two-col">
+                <div class="glass-card">
+                    <h3 class="card-title">Elemental Balance</h3>
+                    <canvas id="ohaengChart" style="max-height:280px;"></canvas>
+                </div>
+                <div class="glass-card">
+                    <h3 class="card-title">Balance Analysis</h3>
+                    <div class="md-content">{{ interp.ohaeng_analysis.balance_text }}</div>
+                    <div class="el-bars">
+                        {% for el, pct in interp.ohaeng_analysis.percentages.items() %}
+                        <div class="el-row">
+                            <span class="el-label {{ el }}">{{ el|capitalize }}</span>
+                            <div class="el-bar-bg">
+                                <div class="el-bar {{ el }}" style="width:{{ pct }}%"></div>
+                            </div>
+                            <span class="el-pct">{{ pct|round|int }}%</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div style="margin-top:1.5rem;">
+                        <h4 style="color:var(--gold);margin-bottom:0.5rem;">Health & Wellness</h4>
+                        <div class="md-content">{{ interp.health_analysis }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: Life Journey -->
+        <div id="gmhs" class="tab-content" style="display:none;">
+            <div class="timeline">
+                {% for p in ['year','month','day','hour'] %}
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="glass-card timeline-card">
+                        <h3 class="card-title">
+                            {{ interp.gmhs[p].period }}
+                            <small class="pillar-badge {{ interp.gmhs[p].pillar.gan_element }}">
+                                {{ interp.gmhs[p].pillar.gan }}{{ interp.gmhs[p].pillar.zhi }}
+                            </small>
+                        </h3>
+                        <div class="md-content">{{ interp.gmhs[p].desc }}</div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- TAB 4: Major Cycles -->
+        <div id="daewoon" class="tab-content" style="display:none;">
+            <div class="glass-card accent-card">
+                <h3 class="card-title"><i class="fa-solid fa-chart-line"></i> Cycle Overview</h3>
+                <div class="md-content">{{ interp.daewoon_trend }}</div>
+            </div>
+            <div class="dw-grid">
+                {% for dw in interp.daewoon %}
+                <div class="dw-card">
+                    <div class="dw-age">{{ dw.age }}s</div>
+                    <div class="dw-pillar">
+                        <span class="{{ dw.gan_element }}">{{ dw.gan }}</span>
+                        <span class="{{ dw.zhi_element }}">{{ dw.zhi }}</span>
+                    </div>
+                    <p class="dw-text">{{ dw.text }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div style="text-align:center;padding:3rem 0 2rem;">
+            <a href="/" class="cta-btn" style="display:inline-block;text-decoration:none;">← New Reading</a>
+        </div>
+    </div>
+
+    <script>
+        function openTab(e, name) {
+            document.querySelectorAll('.tab-content').forEach(c => c.style.display='none');
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(name).style.display='block';
+            e.currentTarget.classList.add('active');
+        }
+        document.querySelectorAll('.md-content').forEach(el => {
+            el.innerHTML = marked.parse(el.textContent || el.innerText);
+        });
+        new Chart(document.getElementById('ohaengChart'), {
+            type: 'radar',
+            data: {
+                labels: ['Wood 목', 'Fire 화', 'Earth 토', 'Metal 금', 'Water 수'],
+                datasets: [{
+                    data: [{{ ohaeng.wood }}, {{ ohaeng.fire }}, {{ ohaeng.earth }}, {{ ohaeng.metal }}, {{ ohaeng.water }}],
+                    backgroundColor: 'rgba(201,169,110,0.2)',
+                    borderColor: '#c9a96e',
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: '#c9a96e',
+                    borderWidth: 1.5, pointRadius: 4
+                }]
+            },
+            options: {
+                scales: { r: { suggestedMin:0, suggestedMax:5, ticks:{display:false}, grid:{color:'rgba(255,255,255,0.05)'} } },
+                plugins: { legend: { display:false } }
+            }
+        });
+    </script>
+</body>
+</html>

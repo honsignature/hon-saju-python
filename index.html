@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HON. Soul Signature — Discover Your Elemental Self</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container center-page">
+        <div class="glass-card form-card fade-in">
+            <div class="brand-header">
+                <p class="eyebrow">HON. Soul Signature</p>
+                <h1 class="brand-title">The First <em>Rite</em></h1>
+                <p class="brand-sub">Reveal your elemental blueprint through the ancient art of Korean Four Pillars</p>
+            </div>
+
+            <div class="gold-line"></div>
+
+            <form action="/loading" method="POST">
+                <div class="form-group">
+                    <label class="form-label">Your Name</label>
+                    <input type="text" name="name" class="form-input" placeholder="Enter your full name" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Essence</label>
+                        <div class="gender-toggle">
+                            <label class="gender-btn">
+                                <input type="radio" name="gender" value="female" checked>
+                                <span>Feminine ♀</span>
+                            </label>
+                            <label class="gender-btn">
+                                <input type="radio" name="gender" value="male">
+                                <span>Masculine ♂</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Calendar</label>
+                        <select name="calendar" class="form-input">
+                            <option value="solar">Solar (양력)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Date of Birth</label>
+                        <input type="date" name="birth_date" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Hour of Birth</label>
+                        <input type="time" name="birth_time" class="form-input" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="cta-btn">
+                    Reveal My Soul Signature →
+                </button>
+                <p class="form-note">Calculated using precision Korean Four Pillars methodology</p>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
