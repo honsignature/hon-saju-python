@@ -2,3 +2,4 @@ flask
 korean-lunar-calendar
 anthropic
 python-dotenv
+gunicorn
